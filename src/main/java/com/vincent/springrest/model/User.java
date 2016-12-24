@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class User implements Serializable {
 	/**
 	 * 
@@ -18,7 +20,10 @@ public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private LocalDate dateOfBirth;
+	
 	public User(Integer id, String username, String password, String firstName, String lastName, String email,
 			LocalDate dateOfBirth) {
 		this.id = id;
