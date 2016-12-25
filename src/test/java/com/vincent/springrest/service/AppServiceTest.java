@@ -45,7 +45,7 @@ public class AppServiceTest {
 	}
 
 	@After
-	public void verify() {
+	public void reset() {
 		// This is allowed here: using container injected mocks
 		Mockito.reset(userDAO);
 	}
