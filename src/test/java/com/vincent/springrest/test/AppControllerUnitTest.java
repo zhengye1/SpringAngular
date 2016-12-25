@@ -44,6 +44,7 @@ public class AppControllerUnitTest {
                 .build();
 	}
 	
+	//========================== Get All Users ================================
 	@Test
 	public void test_get_all_success() throws Exception {
 	    List<User> users = Arrays.asList(
@@ -72,4 +73,48 @@ public class AppControllerUnitTest {
 	    verify(userService, times(1)).findAllUsers();
 	    verifyNoMoreInteractions(userService);
 	}
+	
+	//========================== Get User by Id ===============================
+    @Test
+    public void test_get_by_id_success() throws Exception {
+        User user = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));
+
+        when(userService.findById(1)).thenReturn(user);
+
+        mockMvc.perform(get("/user/Id{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	            .andExpect(jsonPath("$.id", is(1)))
+	            .andExpect(jsonPath("$.username", is("admin")))
+	            .andExpect(jsonPath("$.firstName", is("Admin")))
+	            .andExpect(jsonPath("$.lastName", is("Admin")))
+	            .andExpect(jsonPath("$.email", is("vincentcheng787@gmail.com")))
+	            .andExpect(jsonPath("$.dateOfBirth", is(new LocalDate(1990, 12, 1).toString())));
+
+        verify(userService, times(1)).findById(1);
+        verifyNoMoreInteractions(userService);
+    }
+    
+	//========================== Get User by username ===============================
+    @Test
+    public void test_get_by_username_success() throws Exception {
+        User user = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));
+
+        when(userService.findByUsername("admin")).thenReturn(user);
+
+        mockMvc.perform(get("/user/{username}", "admin"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+	            .andExpect(jsonPath("$.id", is(1)))
+	            .andExpect(jsonPath("$.username", is("admin")))
+	            .andExpect(jsonPath("$.firstName", is("Admin")))
+	            .andExpect(jsonPath("$.lastName", is("Admin")))
+	            .andExpect(jsonPath("$.email", is("vincentcheng787@gmail.com")))
+	            .andExpect(jsonPath("$.dateOfBirth", is(new LocalDate(1990, 12, 1).toString())));
+
+        verify(userService, times(1)).findByUsername("admin");
+        verifyNoMoreInteractions(userService);
+    }
 }

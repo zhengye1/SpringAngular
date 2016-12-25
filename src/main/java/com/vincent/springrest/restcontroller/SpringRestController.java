@@ -41,13 +41,11 @@ public class SpringRestController {
 	//@RequestMapping(value="/user/{username}", method=RequestMethod.GET)
 	public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username){
 		User user = userService.findByUsername(username);
-		final HttpHeaders httpHeaders= new HttpHeaders();
-		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		if (user == null){
 			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 		}
 		logger.info("Retrive the user info for username {} : {}", username, user);
-		return new ResponseEntity<User>(user, httpHeaders, HttpStatus.OK);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/user/Id{id}", method=RequestMethod.GET, 
