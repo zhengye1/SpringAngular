@@ -61,14 +61,14 @@ public class AppControllerUnitTest {
 	            .andExpect(jsonPath("$[0].firstName", is("Admin")))
 	            .andExpect(jsonPath("$[0].lastName", is("Admin")))
 	            .andExpect(jsonPath("$[0].email", is("vincentcheng787@gmail.com")))
-	            .andExpect(jsonPath("$[0].dateOfBirth", is(new LocalDate(1990, 12, 1))))
+	            .andExpect(jsonPath("$[0].dateOfBirth", is(new LocalDate(1990, 12, 1).toString())))
 	            // second one
 	            .andExpect(jsonPath("$[1].id", is(2)))
 	            .andExpect(jsonPath("$[1].username", is("yukirin")))
 	            .andExpect(jsonPath("$[1].firstName", is("Yuki")))
 	            .andExpect(jsonPath("$[1].lastName", is("Kashiwagi")))
-	            .andExpect(jsonPath("$[1].email", is("yuki.kashiwagi@akb.co.jp")));
-	            //.andExpect(jsonPath("$[1].dateOfBirth", is(new LocalDate(1991, 7, 15))));
+	            .andExpect(jsonPath("$[1].email", is("yuki.kashiwagi@akb.co.jp")))
+	            .andExpect(jsonPath("$[1].dateOfBirth", is(new LocalDate(1991, 7, 15).toString())));
 	    verify(userService, times(1)).findAllUsers();
 	    verifyNoMoreInteractions(userService);
 	}
