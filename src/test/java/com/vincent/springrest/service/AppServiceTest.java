@@ -2,6 +2,9 @@ package com.vincent.springrest.service;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
@@ -31,14 +34,19 @@ public class AppServiceTest {
 
 	@Before
 	public void setup() {
-		User user = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
+		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
 				new LocalDate(1990, 12, 1));
-		Mockito.when(userDAO.findByUsername("admin")).thenReturn(user);
+		User user2 = new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
+				new LocalDate(1991, 7, 15));
+		List<User> expected = Arrays.asList(user1, user2);
+		Mockito.when(userDAO.findByUsername("admin")).thenReturn(user1);
+		Mockito.when(userDAO.findAllUsers()).thenReturn(expected);
 	}
 
 	@After
 	public void verify() {
 		Mockito.verify(userDAO, VerificationModeFactory.times(1)).findByUsername(Mockito.anyString());
+		//Mockito.verify(userDAO, VerificationModeFactory.times(1)).findAllUsers();
 		// This is allowed here: using container injected mocks
 		Mockito.reset(userDAO);
 	}
@@ -53,7 +61,22 @@ public class AppServiceTest {
 		assertEquals("vincentcheng787@gmail.com", user.getEmail());
 		assertEquals("1990-12-01", user.getDateOfBirth().toString());
 	}
+	
+	@Test
+	public void testFindByUsernameFail(){
+		User user = userService.findByUsername("yukirin");
+		assertNull(user);
+	}
 
+//	@Test
+//	public void testFindAll(){
+//		List<User> users = userService.findAllUsers();
+//		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
+//				new LocalDate(1990, 12, 1));
+//		User user2 = new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
+//				new LocalDate(1991, 7, 15));
+//		assertEquals(Arrays.asList(user1, user2), users);
+//	}
 
 	@Configuration
 	static class UserServiceTestContextConfiguration {
