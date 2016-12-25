@@ -30,7 +30,9 @@ public class CORSFilter implements Filter{
 		logger.info("Finish filter");
 	}
 
+	@Override
 	public void init(FilterConfig filterConfig) {}
 
+	@Override
 	public void destroy() {}
 }

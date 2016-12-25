@@ -17,7 +17,6 @@ import com.vincent.springrest.model.User;
 import com.vincent.springrest.restcontroller.SpringRestController;
 import com.vincent.springrest.service.UserService;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
