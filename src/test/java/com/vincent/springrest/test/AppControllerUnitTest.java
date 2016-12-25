@@ -1,5 +1,6 @@
 package com.vincent.springrest.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,6 +74,17 @@ public class AppControllerUnitTest {
 	    verifyNoMoreInteractions(userService);
 	}
 	
+	//========================== Get All Users with empty =====================
+	@Test
+	public void test_get_all_with_204() throws Exception {
+	    List<User> users = new ArrayList<>();
+	    when(userService.findAllUsers()).thenReturn(users);
+	    mockMvc.perform(get("/user/"))
+	            .andExpect(status().isNoContent());
+	    verify(userService, times(1)).findAllUsers();
+	    verifyNoMoreInteractions(userService);
+	}
+	
 	//========================== Get User by Id ===============================
     @Test
     public void test_get_by_id_success() throws Exception {
@@ -95,6 +107,19 @@ public class AppControllerUnitTest {
         verifyNoMoreInteractions(userService);
     }
     
+    //========================== Get User by Id with 404 ======================
+    @Test
+    public void test_get_by_id_fail_404_not_found() throws Exception {
+
+        when(userService.findById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/user/Id{id}", 1))
+                .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).findById(1);
+        verifyNoMoreInteractions(userService);
+    }
+    
 	//========================== Get User by username ===============================
     @Test
     public void test_get_by_username_success() throws Exception {
@@ -112,6 +137,19 @@ public class AppControllerUnitTest {
 	            .andExpect(jsonPath("$.lastName", is("Admin")))
 	            .andExpect(jsonPath("$.email", is("vincentcheng787@gmail.com")))
 	            .andExpect(jsonPath("$.dateOfBirth", is(new LocalDate(1990, 12, 1).toString())));
+
+        verify(userService, times(1)).findByUsername("admin");
+        verifyNoMoreInteractions(userService);
+    }
+    
+    //========================== Get User by username with 404 ================
+    @Test
+    public void test_get_by_username_fail_404_not_found() throws Exception {
+
+        when(userService.findById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/user/{username}", "admin"))
+                .andExpect(status().isNotFound());
 
         verify(userService, times(1)).findByUsername("admin");
         verifyNoMoreInteractions(userService);

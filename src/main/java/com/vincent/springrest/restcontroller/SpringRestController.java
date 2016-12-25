@@ -42,7 +42,7 @@ public class SpringRestController {
 	public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username){
 		User user = userService.findByUsername(username);
 		if (user == null){
-			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 		logger.info("Retrive the user info for username {} : {}", username, user);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class SpringRestController {
 	public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
 		User user = userService.findById(id);
 		if (user == null){
-			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 		logger.info("Retrive the user info for id {} : {}", id, user);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
