@@ -1,4 +1,4 @@
-package com.vincent.springrest.test;
+package com.vincent.springrest.restcontroller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
