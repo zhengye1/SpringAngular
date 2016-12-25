@@ -24,7 +24,7 @@ public class User implements Serializable {
 	private String lastName;
 	private String email;
 	
-    @JsonDeserialize(using = CustomDateDeserializer.class)
+    //@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private LocalDate dateOfBirth;
