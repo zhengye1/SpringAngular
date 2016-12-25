@@ -27,6 +27,9 @@ public class User implements Serializable {
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private LocalDate dateOfBirth;
 	
+	public User(){
+		
+	}
 	public User(Integer id, String username, String password, String firstName, String lastName, String email,
 			LocalDate dateOfBirth) {
 		this.id = id;

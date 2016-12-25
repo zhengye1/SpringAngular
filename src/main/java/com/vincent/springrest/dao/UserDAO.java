@@ -8,4 +8,6 @@ public interface UserDAO {
 	User findById(Integer id);
 	User findByUsername(String username);
 	List<User> findAllUsers();
+	void create(User user);
+	boolean exists(User user);
 }

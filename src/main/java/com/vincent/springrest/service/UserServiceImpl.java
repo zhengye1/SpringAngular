@@ -32,4 +32,16 @@ public class UserServiceImpl implements UserService{
 		return userDAO.findAllUsers();
 	}
 
+	@Override
+	public boolean exists(User user) {
+		return userDAO.exists(user);
+		
+	}
+
+	@Override
+	public void create(User user) {
+		// TODO Auto-generated method stub
+		userDAO.create(user);
+	}
+
 }

@@ -13,13 +13,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vincent.springrest.filter.CORSFilter;
 import com.vincent.springrest.model.User;
 import com.vincent.springrest.restcontroller.SpringRestController;
 import com.vincent.springrest.service.UserService;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.Is.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -154,4 +157,32 @@ public class AppControllerUnitTest {
         verify(userService, times(1)).findByUsername("admin");
         verifyNoMoreInteractions(userService);
     }
+    
+    //========================== Post user ====================================
+    @Test
+    public void test_create_user_success() throws Exception{
+    	 User user = new User(3, "zhengye1", "password", "Vincent", "Zheng", "vincentcheng787@gmail.com", 
+ 				new LocalDate(1990, 12, 1));
+         when(userService.exists(user)).thenReturn(false);
+         doNothing().when(userService).create(user);
+
+         mockMvc.perform(
+                 post("/user/")
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .content(asJsonString(user)))
+                 .andExpect(status().isCreated())
+                 .andExpect(header().string("location", containsString("http://localhost/user/")));
+
+         verify(userService, times(1)).exists(user);
+         verify(userService, times(1)).create(user);
+         verifyNoMoreInteractions(userService);
+    }
+
+	private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+	}
 }

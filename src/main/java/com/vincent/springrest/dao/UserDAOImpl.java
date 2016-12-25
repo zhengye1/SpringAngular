@@ -53,6 +53,18 @@ public class UserDAOImpl implements UserDAO {
 		return users;
 	}
 
+	@Override
+	public void create(User user) {
+		// TODO Auto-generated method stub
+		users.add(user);
+	}
+
+	@Override
+	public boolean exists(User user) {
+		// TODO Auto-generated method stub
+		 return findByUsername(user.getUsername()) != null;
+	}
+
 
 
 }
