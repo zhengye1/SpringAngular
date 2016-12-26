@@ -1,6 +1,9 @@
 package com.vincent.springrest.service;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +18,7 @@ import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,7 +31,7 @@ public class AppServiceTest {
 
 
 	@Autowired
-	UserService userService; 
+	UserServiceImpl userService; 
 
 	@Autowired
 	UserDAO userDAO;
@@ -42,6 +46,7 @@ public class AppServiceTest {
 		Mockito.when(userDAO.findByUsername("admin")).thenReturn(user1);
 		Mockito.when(userDAO.findById(1)).thenReturn(user1);
 		Mockito.when(userDAO.findAllUsers()).thenReturn(expected);
+		doNothing().when(userDAO).create(any(User.class));
 	}
 
 	@After
@@ -61,14 +66,14 @@ public class AppServiceTest {
 		assertEquals("1990-12-01", user.getDateOfBirth().toString());
 		Mockito.verify(userDAO, VerificationModeFactory.times(1)).findByUsername(Mockito.anyString());
 	}
-	
+
 	@Test
 	public void testFindByUsernameFail(){
 		User user = userService.findByUsername("yukirin");
 		assertNull(user);
 		Mockito.verify(userDAO, VerificationModeFactory.times(1)).findByUsername(Mockito.anyString());
 	}
-	
+
 	@Test
 	public void testFindByIdSuccess(){
 		User user = userService.findById(1);
@@ -80,7 +85,7 @@ public class AppServiceTest {
 		assertEquals("1990-12-01", user.getDateOfBirth().toString());
 		Mockito.verify(userDAO, VerificationModeFactory.times(1)).findById(Mockito.anyInt());
 	}
-	
+
 	@Test
 	public void testFindByIdFail(){
 		User user = userService.findById(2);
@@ -97,6 +102,15 @@ public class AppServiceTest {
 				new LocalDate(1991, 7, 15));
 		assertEquals(Arrays.asList(user1, user2), users);
 		Mockito.verify(userDAO, VerificationModeFactory.times(1)).findAllUsers();
+	}
+
+	@Rollback(true)
+	@Test
+	public void testCreateUser(){
+		User user = new User(3, "zhengye1", "Yuki0715", "Vincent", "Zheng", "yuki.kashiwagi@akb.co.jp", 
+				new LocalDate(1991, 7, 15));
+		userService.create(user);
+		Mockito.verify(userDAO, atLeastOnce()).create(user);
 	}
 
 	@Configuration
