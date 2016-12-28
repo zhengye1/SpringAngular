@@ -21,14 +21,14 @@ public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
-	
-    //@JsonDeserialize(using = CustomDateDeserializer.class)
+
+	//@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private LocalDate dateOfBirth;
-	
+
 	public User(){
-		
+
 	}
 	public User(Integer id, String username, String password, String firstName, String lastName, String email,
 			LocalDate dateOfBirth) {
@@ -82,12 +82,12 @@ public class User implements Serializable {
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	} 
-	
+
 	@Override
 	public boolean equals(Object obj){
 		return EqualsBuilder.reflectionEquals(this, obj);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

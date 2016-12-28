@@ -9,5 +9,4 @@ public interface UserDAO {
 	User findByUsername(String username);
 	List<User> findAllUsers();
 	void create(User user);
-	boolean exists(User user);
 }

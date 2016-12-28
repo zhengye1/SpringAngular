@@ -64,7 +64,7 @@ public class SpringRestController {
 	public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder ucBuilder){
 		logger.info("creating new user: {}", user);
 		
-		if (userService.exists(user)){
+		if (userService.existsUsername(user.getId(), user.getUsername())){
             logger.info("a user with name " + user.getUsername() + " already exists");
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }

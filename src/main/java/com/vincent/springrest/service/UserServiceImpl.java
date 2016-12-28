@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	UserDAO userDAO;
-	
+
 	@Override
 	public User findById(Integer id) {
 		// TODO Auto-generated method stub
@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean exists(User user) {
-		return userDAO.exists(user);
-		
+	public boolean existsUsername(Integer id, String username) {
+		User user = findByUsername(username);
+		return (user == null || ((id != null) && (user.getId() == id)));
 	}
 
 	@Override

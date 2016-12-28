@@ -33,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
 		for(User user : users){
 			if (user.getUsername().equalsIgnoreCase(username)){
 				return user;
-			}
+			}	
 		}
 		return null;
 	}
@@ -59,11 +59,6 @@ public class UserDAOImpl implements UserDAO {
 		users.add(user);
 	}
 
-	@Override
-	public boolean exists(User user) {
-		// TODO Auto-generated method stub
-		 return findByUsername(user.getUsername()) != null;
-	}
 
 
 

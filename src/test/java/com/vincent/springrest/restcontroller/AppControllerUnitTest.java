@@ -164,7 +164,7 @@ public class AppControllerUnitTest {
 	public void test_create_user_success() throws Exception{
 		User user = new User(3, "zhengye1", "password", "Vincent", "Zheng", "vincentcheng787@gmail.com", 
 				new LocalDate(1990, 12, 1));
-		when(userService.exists(user)).thenReturn(false);
+		when(userService.existsUsername(user.getId(), user.getUsername())).thenReturn(false);
 		doNothing().when(userService).create(user);
 
 		mockMvc.perform(
@@ -174,8 +174,24 @@ public class AppControllerUnitTest {
 		.andExpect(status().isCreated())
 		.andExpect(header().string("location", containsString("http://localhost/user/")));
 
-		verify(userService, times(1)).exists(user);
+		verify(userService, times(1)).existsUsername(user.getId(), user.getUsername());
 		verify(userService, times(1)).create(user);
+		verifyNoMoreInteractions(userService);
+	}
+	
+	@Test
+	public void test_create_user_withUsername_exists() throws Exception{
+		User user = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));	
+		when(userService.existsUsername(user.getId(), user.getUsername())).thenReturn(true);
+		doNothing().when(userService).create(user);
+		mockMvc.perform(
+				post("/user/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(user)))
+		.andExpect(status().isConflict());
+		verify(userService, times(1)).existsUsername(user.getId(), user.getUsername());
+		//verify(userService, times(1)).create(user);
 		verifyNoMoreInteractions(userService);
 	}
 
