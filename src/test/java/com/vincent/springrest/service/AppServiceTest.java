@@ -97,7 +97,7 @@ public class AppServiceTest {
 	public void testNonExistUser(){
 		User user = users.get(0);
 		when(userDAO.findByUsername(anyString())).thenReturn(user);
-		Assert.assertFalse(userService.existsUsername(3,"notExists"));
+		Assert.assertFalse(userService.existsUsername(null,"notExists"));
 	}
 	public List<User> getUserList(){
 		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
