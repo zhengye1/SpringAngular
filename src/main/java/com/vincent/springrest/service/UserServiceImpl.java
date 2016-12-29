@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean existsUsername(Integer id, String username) {
+	public boolean existsUsername(String username) {
 		User user = findByUsername(username);
-		return (user == null || ((id != null) && (user.getId() == id)));
+		return (user != null) && (user.getUsername().equals(username));
 	}
 
 	@Override

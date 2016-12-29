@@ -8,6 +8,6 @@ public interface UserService {
 	User findById(Integer id);
 	User findByUsername(String username);
 	List<User> findAllUsers();
-	boolean existsUsername(Integer id, String username);
+	boolean existsUsername(String username);
 	void create(User user);
 }

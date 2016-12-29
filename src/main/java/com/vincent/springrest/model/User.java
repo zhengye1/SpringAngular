@@ -2,6 +2,8 @@ package com.vincent.springrest.model;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
+import javax.persistence.Id;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,6 +17,8 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -2576213364395816479L;
+	
+	@Id
 	private Integer id;
 	private String username;
 	private String password;

@@ -90,33 +90,23 @@ public class AppServiceTest {
 	public void testExistsUser(){
 		User user = users.get(0);
 		when(userDAO.findByUsername(anyString())).thenReturn(user);
-		Assert.assertTrue(userService.existsUsername(user.getId(), user.getUsername()));
+		Assert.assertTrue(userService.existsUsername(user.getUsername()));
 	}
-	
+
 	@Test
-	public void testNonExistUserWithNullObject(){
+	public void testNonExitUserWithNull(){
 		User user = null;
 		when(userDAO.findByUsername(anyString())).thenReturn(user);
-		Assert.assertTrue(userService.existsUsername(null,"notExists"));
+		Assert.assertFalse(userService.existsUsername("null"));
 	}
 	
 	@Test
-	public void testNonExistUserWithNullID(){
+	public void testNonExitUserWithUsernameDiff(){
 		User user = users.get(0);
 		when(userDAO.findByUsername(anyString())).thenReturn(user);
-		Assert.assertFalse(userService.existsUsername(null, "notExist"));
+		Assert.assertFalse(userService.existsUsername("null"));
 	}
 	
-	
-	@Test
-	public void testNonExistUser(){
-		User user = users.get(0);
-		when(userDAO.findByUsername(anyString())).thenReturn(user);
-		Assert.assertFalse(userService.existsUsername(100000, "notExist"));
-	}
-	
-	
-
 	
 	public List<User> getUserList(){
 		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
