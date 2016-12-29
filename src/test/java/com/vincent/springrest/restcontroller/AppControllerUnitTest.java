@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -154,7 +153,7 @@ public class AppControllerUnitTest {
 	@Test
 	public void test_get_by_username_fail_404_not_found() throws Exception {
 
-		when(userService.findById(1)).thenReturn(null);
+		when(userService.findByUsername("null")).thenReturn(null);
 
 		mockMvc.perform(get(BASEURL + "/search").param("username", "admin"))
 		.andExpect(status().isNotFound());
@@ -227,6 +226,7 @@ public class AppControllerUnitTest {
         user.setUsername("NotExitst");
 
         when(userService.findById(user.getId())).thenReturn(null);
+        doNothing().when(userService).update(user);
 
         mockMvc.perform(
                 put(BASEURL + "/users/{id}", user.getId())
@@ -235,9 +235,38 @@ public class AppControllerUnitTest {
                 .andExpect(status().isNotFound());
 
         verify(userService, times(1)).findById(user.getId());
+        //verify(userService).update(user);
+        verifyNoMoreInteractions(userService);
+    }
+    
+    //========================== DELETE USER ==================================
+    @Test
+    public void test_delete_user_success() throws Exception {
+		User user = new User(1, "admin", "admin", "Vincent", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));	
+        when(userService.findById(user.getId())).thenReturn(user);
+        doNothing().when(userService).delete(user.getId());
+        mockMvc.perform(
+                delete(BASEURL + "/users/{id}", user.getId()))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).findById(user.getId());
+        verify(userService, times(1)).delete(user.getId());
         verifyNoMoreInteractions(userService);
     }
 
+    @Test
+    public void test_delete_user_fail() throws Exception{
+        User user = new User();
+        user.setId(UNKNOWN_ID);
+        user.setUsername("NotExitst");
+        doNothing().when(userService).delete(user.getId());
+        mockMvc.perform(
+                delete(BASEURL + "/users/{id}", user.getId()))
+                .andExpect(status().isNotFound());
+        verify(userService, times(1)).findById(user.getId());
+        //verify(userService, times(1)).delete(user.getId());
+        verifyNoMoreInteractions(userService);
+    }
 	private static String asJsonString(final Object obj) throws JsonProcessingException {
 		return new ObjectMapper().writeValueAsString(obj);
 	}

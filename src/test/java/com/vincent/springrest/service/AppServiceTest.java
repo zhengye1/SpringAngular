@@ -126,6 +126,16 @@ public class AppServiceTest {
 		verify(userDAO, atLeastOnce()).findById(anyInt());
 	}
 	
+	@Rollback(true)
+	@Test
+	public void testDeleteUser(){
+		User user = users.get(0);
+		doNothing().when(userDAO).delete(anyInt());
+		userService.delete(user.getId());
+		verify(userDAO, atLeastOnce()).delete(anyInt());
+	}
+	
+
 	public List<User> getUserList(){
 		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
 				new LocalDate(1990, 12, 1));
