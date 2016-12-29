@@ -59,7 +59,7 @@ public class AppControllerUnitTest {
 				new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
 						new LocalDate(1991, 7, 15)));
 		when(userService.findAllUsers()).thenReturn(users);
-		mockMvc.perform(get("/users/"))
+		mockMvc.perform(get("/users"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$", hasSize(2)))
@@ -99,7 +99,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(user);
 
-		mockMvc.perform(get("/users/Id{id}", 1))
+		mockMvc.perform(get("/users/{id}", 1))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -119,7 +119,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/users/Id{id}", 1))
+		mockMvc.perform(get("/users/{id}", 1))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findById(1);
@@ -134,7 +134,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findByUsername("admin")).thenReturn(user);
 
-		mockMvc.perform(get("/users/{username}", "admin"))
+		mockMvc.perform(get("/search").param("username", "admin"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -154,7 +154,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/users/{username}", "admin"))
+		mockMvc.perform(get("/search").param("username", "admin"))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findByUsername("admin");
@@ -208,7 +208,7 @@ public class AppControllerUnitTest {
         doNothing().when(userService).update(user);
 
         mockMvc.perform(
-                put("/users/Id{id}", user.getId())
+                put("/users/{id}", user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isOk());
@@ -227,7 +227,7 @@ public class AppControllerUnitTest {
         when(userService.findById(user.getId())).thenReturn(null);
 
         mockMvc.perform(
-                put("/users/Id{id}", user.getId())
+                put("/users/{id}", user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isNotFound());

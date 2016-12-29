@@ -8,12 +8,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.vincent.springrest")
 public class AppConfig extends WebMvcConfigurerAdapter {
-	
-	
+
+
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 		configurer.favorPathExtension(false).
@@ -25,4 +26,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		mediaType("xml", MediaType.APPLICATION_XML).
 		mediaType("json", MediaType.APPLICATION_JSON);
 	}
+
 }

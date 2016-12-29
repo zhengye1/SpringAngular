@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,7 +28,8 @@ public class SpringRestController {
 
 	static final Logger logger = LoggerFactory.getLogger(SpringRestController.class);
 
-	@RequestMapping(value="/users/", method=RequestMethod.GET)
+	@RequestMapping(value="/users", method=RequestMethod.GET,
+				produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<List<User>> listAllUsers(){
 		List<User> users = userService.findAllUsers();
 		if(users.isEmpty()){
@@ -37,10 +39,10 @@ public class SpringRestController {
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
-	@RequestMapping(value="/users/{username}", method=RequestMethod.GET, 
+	@RequestMapping(value="/search", method=RequestMethod.GET, 
 			produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 			
-	public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username){
+	public ResponseEntity<User> getUserByUsername(@RequestParam("username") String username){
 		User user = userService.findByUsername(username);
 		if (user == null){
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
@@ -49,7 +51,7 @@ public class SpringRestController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/users/Id{id}", method=RequestMethod.GET, 
+	@RequestMapping(value="/users/{id}", method=RequestMethod.GET, 
 			produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
 		User user = userService.findById(id);
@@ -77,7 +79,7 @@ public class SpringRestController {
 	}
 	
 	
-	@RequestMapping(value="/users/Id{id}", method=RequestMethod.PUT)
+	@RequestMapping(value="/users/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<User> update(@PathVariable int id, @RequestBody User user){
 		logger.info("Updating the information for user: {} ", user);
 		User current = userService.findById(id);
@@ -88,4 +90,18 @@ public class SpringRestController {
 		userService.update(user);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="/users/{id}", method= RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable("id") int id){
+        logger.info("deleting user with id: {}", id);
+        User user = userService.findById(id);
+
+        if (user == null){
+            logger.info("Unable to delete. User with id {} not found", id);
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+
+        userService.delete(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }

@@ -59,6 +59,13 @@ public class UserDAOImpl implements UserDAO {
 		users.add(user);
 	}
 
+	@Override
+	public void delete(int id) {
+		// TODO Auto-generated method stub
+		User user =findById(id);
+		users.remove(user);
+	}
+
 
 
 

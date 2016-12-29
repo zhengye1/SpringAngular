@@ -11,4 +11,5 @@ public interface UserService {
 	boolean existsUsername(String username);
 	void create(User user);
 	void update(User user);
+	void delete(int id);
 }

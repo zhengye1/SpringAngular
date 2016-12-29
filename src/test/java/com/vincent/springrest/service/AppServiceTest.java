@@ -116,6 +116,16 @@ public class AppServiceTest {
 		verify(userDAO, atLeastOnce()).findById(anyInt());
 	}
 	
+	@Test
+	public void testUpdateNonExistsUser(){
+		User user = new User();
+		user.setId(5);
+		user.setUsername("null");
+		when(userDAO.findById(anyInt())).thenReturn(null);
+		userService.update(user);
+		verify(userDAO, atLeastOnce()).findById(anyInt());
+	}
+	
 	public List<User> getUserList(){
 		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
 				new LocalDate(1990, 12, 1));

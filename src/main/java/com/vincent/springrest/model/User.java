@@ -3,6 +3,11 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -12,23 +17,38 @@ import com.vincent.springrest.convert.CustomDateSerializer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2576213364395816479L;
 	
+	@XmlAttribute
 	@Id
 	private Integer id;
+	
+	@XmlElement
 	private String username;
+	
+	@XmlElement
 	private String password;
+	
+	@XmlElement
 	private String firstName;
+	
+	@XmlElement
 	private String lastName;
+	
+	@XmlElement
 	private String email;
 
 	//@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@XmlElement
 	private LocalDate dateOfBirth;
 
 	public User(){
