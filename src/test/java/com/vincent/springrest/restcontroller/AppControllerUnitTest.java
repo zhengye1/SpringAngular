@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,7 @@ public class AppControllerUnitTest {
 	@InjectMocks
 	private SpringRestController appController;
 
+	final String BASEURL = "/api/v1";
 	@Before
 	public void init(){
 		MockitoAnnotations.initMocks(this);
@@ -59,7 +61,7 @@ public class AppControllerUnitTest {
 				new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
 						new LocalDate(1991, 7, 15)));
 		when(userService.findAllUsers()).thenReturn(users);
-		mockMvc.perform(get("/users"))
+		mockMvc.perform(get(BASEURL + "/users"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$", hasSize(2)))
@@ -85,7 +87,7 @@ public class AppControllerUnitTest {
 	public void test_get_all_with_204() throws Exception {
 		List<User> users = new ArrayList<>();
 		when(userService.findAllUsers()).thenReturn(users);
-		mockMvc.perform(get("/users/"))
+		mockMvc.perform(get(BASEURL + "/users/"))
 		.andExpect(status().isNoContent());
 		verify(userService, times(1)).findAllUsers();
 		verifyNoMoreInteractions(userService);
@@ -99,7 +101,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(user);
 
-		mockMvc.perform(get("/users/{id}", 1))
+		mockMvc.perform(get(BASEURL + "/users/{id}", 1))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -119,7 +121,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/users/{id}", 1))
+		mockMvc.perform(get(BASEURL + "/users/{id}", 1))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findById(1);
@@ -134,7 +136,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findByUsername("admin")).thenReturn(user);
 
-		mockMvc.perform(get("/search").param("username", "admin"))
+		mockMvc.perform(get(BASEURL + "/search").param("username", "admin"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -154,7 +156,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/search").param("username", "admin"))
+		mockMvc.perform(get(BASEURL + "/search").param("username", "admin"))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findByUsername("admin");
@@ -170,7 +172,7 @@ public class AppControllerUnitTest {
 		doNothing().when(userService).create(user);
 
 		mockMvc.perform(
-				post("/users/")
+				post(BASEURL + "/users/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(user)))
 		.andExpect(status().isCreated())
@@ -188,7 +190,7 @@ public class AppControllerUnitTest {
 		when(userService.existsUsername(user.getUsername())).thenReturn(true);
 		doNothing().when(userService).create(user);
 		mockMvc.perform(
-				post("/users/")
+				post(BASEURL + "/users/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(user)))
 		.andExpect(status().isConflict());
@@ -208,7 +210,7 @@ public class AppControllerUnitTest {
         doNothing().when(userService).update(user);
 
         mockMvc.perform(
-                put("/users/{id}", user.getId())
+                put(BASEURL + "/users/{id}", user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isOk());
@@ -227,7 +229,7 @@ public class AppControllerUnitTest {
         when(userService.findById(user.getId())).thenReturn(null);
 
         mockMvc.perform(
-                put("/users/{id}", user.getId())
+                put(BASEURL + "/users/{id}", user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isNotFound());

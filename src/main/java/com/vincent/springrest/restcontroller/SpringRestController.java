@@ -21,6 +21,7 @@ import com.vincent.springrest.model.User;
 import com.vincent.springrest.service.UserService;
 
 @RestController
+@RequestMapping("/api/v1")
 public class SpringRestController {
 
 	@Autowired

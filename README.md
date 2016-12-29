@@ -7,3 +7,12 @@ A simple web project that using following:
  - Front end: HTML5	with Angular
  - Back end: Spring RESTful
  - Database: MySQL (Planning)
+ 
+
+#Usage
+- Base URL: localhost:[port #]/AngularSpringBackend/
+- GET `/api/v1/users` - return the list of users
+- GET `/api/v1/users/:id` - return the details of user with id `:id`
+- POST `/api/v1/users` - create a new user
+- PUT `/api/v1/users/:id` - update the information of user with id `:id`
+- DELETE `/api/v1/users/:id` - delete the information of user with id `:id`
