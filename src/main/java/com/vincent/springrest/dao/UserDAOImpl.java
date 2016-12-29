@@ -1,72 +1,74 @@
 package com.vincent.springrest.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.vincent.springrest.model.User;
 
 @Repository("userDAO")
 public class UserDAOImpl implements UserDAO {
+	
+	@PersistenceContext
+	EntityManager entityManager;
 
-	private static List<User> users;
-
-	static{
-		users= populateDummyUsers();
-	}
-
+	static final Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
+	
 	@Override
 	public User findById(Integer id) {
 		// TODO Auto-generated method stub
-		for(User user : users){
-			if (user.getId().equals(id)){
-				return user;
-			}
-		}
-		return null;
+		return entityManager.find( User.class, id );
 	}
 
 	@Override
 	public User findByUsername(String username) {
-		for(User user : users){
-			if (user.getUsername().equalsIgnoreCase(username)){
-				return user;
-			}	
+		return findOneByField("username", username);
+	}
+
+
+	private User findOneByField(String colName, String colValue) {
+		// TODO Auto-generated method stub
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> crit = cb.createQuery(User.class);
+		Root<User> root = crit.from(User.class);
+		crit.where(cb.equal(root.get(colName), colValue));
+		try{
+			return entityManager.createQuery(crit).getSingleResult();
 		}
-		return null;
+		catch(Exception e){
+			return null;
+		}
 	}
 
 	@Override
 	public List<User> findAllUsers() {
-		// TODO Auto-generated method stub
-		return users;
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> crit = cb.createQuery(User.class);
+		Root<User> root = crit.from(User.class);
+		crit.select(root);
+		return entityManager.createQuery(crit).getResultList();
 	}
 
-	private static List<User> populateDummyUsers(){
-		List<User> users = new ArrayList<User>();
-		users.add(new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
-				new LocalDate(1990, 12, 1)));
-		users.add(new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
-				new LocalDate(1991, 7, 15)));
-		return users;
-	}
 
 	@Override
 	public void create(User user) {
 		// TODO Auto-generated method stub
-		users.add(user);
+		 logger.debug("Calling DB for create user: {}", user);
+		entityManager.merge(user);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		User user =findById(id);
-		users.remove(user);
+		User user = findById(id);
+		entityManager.remove( user );
 	}
-
-
-
 
 }

@@ -2,7 +2,13 @@ package com.vincent.springrest.model;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -12,7 +18,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.vincent.springrest.convert.CustomDateSerializer;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,35 +30,47 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Entity
+@Table(name="USER")
 public class User implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2576213364395816479L;
-	
+
 	@XmlAttribute
-	@Id
+	@Id @Column(name="uid") @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@XmlElement
+	@NotEmpty
+	@Column(name="username")
 	private String username;
-	
+
 	@XmlElement
+	@Column(name="password")
 	private String password;
-	
+
 	@XmlElement
+	@Column(name="firstName")
 	private String firstName;
-	
+
 	@XmlElement
+	@Column(name="lastName")
 	private String lastName;
-	
+
 	@XmlElement
+	@Column(name="email")
 	private String email;
 
 	//@JsonDeserialize(using = CustomDateDeserializer.class)
 	@JsonSerialize(using = CustomDateSerializer.class)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	@XmlElement
+	@NotNull
+	@DateTimeFormat(pattern="dd/MM/yyyy") 
+	@Column(name = "dateOfBirth", nullable = false)
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate dateOfBirth;
 
 	public User(){
