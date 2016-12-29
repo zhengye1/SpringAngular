@@ -31,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AppControllerUnitTest {
 
+	private static final Integer UNKNOWN_ID = Integer.MAX_VALUE;
+
 	private MockMvc mockMvc;
 
 	@Mock
@@ -57,7 +59,7 @@ public class AppControllerUnitTest {
 				new User(2, "yukirin", "Yuki0715", "Yuki", "Kashiwagi", "yuki.kashiwagi@akb.co.jp", 
 						new LocalDate(1991, 7, 15)));
 		when(userService.findAllUsers()).thenReturn(users);
-		mockMvc.perform(get("/user/"))
+		mockMvc.perform(get("/users/"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$", hasSize(2)))
@@ -83,7 +85,7 @@ public class AppControllerUnitTest {
 	public void test_get_all_with_204() throws Exception {
 		List<User> users = new ArrayList<>();
 		when(userService.findAllUsers()).thenReturn(users);
-		mockMvc.perform(get("/user/"))
+		mockMvc.perform(get("/users/"))
 		.andExpect(status().isNoContent());
 		verify(userService, times(1)).findAllUsers();
 		verifyNoMoreInteractions(userService);
@@ -97,7 +99,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(user);
 
-		mockMvc.perform(get("/user/Id{id}", 1))
+		mockMvc.perform(get("/users/Id{id}", 1))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -117,7 +119,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/user/Id{id}", 1))
+		mockMvc.perform(get("/users/Id{id}", 1))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findById(1);
@@ -132,7 +134,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findByUsername("admin")).thenReturn(user);
 
-		mockMvc.perform(get("/user/{username}", "admin"))
+		mockMvc.perform(get("/users/{username}", "admin"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 		.andExpect(jsonPath("$.id", is(1)))
@@ -152,7 +154,7 @@ public class AppControllerUnitTest {
 
 		when(userService.findById(1)).thenReturn(null);
 
-		mockMvc.perform(get("/user/{username}", "admin"))
+		mockMvc.perform(get("/users/{username}", "admin"))
 		.andExpect(status().isNotFound());
 
 		verify(userService, times(1)).findByUsername("admin");
@@ -168,7 +170,7 @@ public class AppControllerUnitTest {
 		doNothing().when(userService).create(user);
 
 		mockMvc.perform(
-				post("/user/")
+				post("/users/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(user)))
 		.andExpect(status().isCreated())
@@ -186,14 +188,53 @@ public class AppControllerUnitTest {
 		when(userService.existsUsername(user.getUsername())).thenReturn(true);
 		doNothing().when(userService).create(user);
 		mockMvc.perform(
-				post("/user/")
+				post("/users/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(user)))
 		.andExpect(status().isConflict());
 		verify(userService, times(1)).existsUsername(user.getUsername());
-		//verify(userService, times(1)).create(user);
+		verify(userService, times(0)).create(user);
 		verifyNoMoreInteractions(userService);
 	}
+	
+	//========================== PUT USER======================================
+
+    @Test
+    public void test_update_user_success() throws Exception {
+		User user = new User(1, "admin", "admin", "Vincent", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));	
+
+        when(userService.findById(user.getId())).thenReturn(user);
+        doNothing().when(userService).update(user);
+
+        mockMvc.perform(
+                put("/users/Id{id}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andExpect(status().isOk());
+
+        verify(userService, times(1)).findById(user.getId());
+        verify(userService, times(1)).update(user);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void test_update_user_fail_404_not_found() throws Exception {
+        User user = new User();
+        user.setId(UNKNOWN_ID);
+        user.setUsername("NotExitst");
+
+        when(userService.findById(user.getId())).thenReturn(null);
+
+        mockMvc.perform(
+                put("/users/Id{id}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andExpect(status().isNotFound());
+
+        verify(userService, times(1)).findById(user.getId());
+        verifyNoMoreInteractions(userService);
+    }
 
 	private static String asJsonString(final Object obj) throws JsonProcessingException {
 		return new ObjectMapper().writeValueAsString(obj);

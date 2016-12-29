@@ -47,4 +47,20 @@ public class UserServiceImpl implements UserService{
 		userDAO.create(user);
 	}
 
+	//Since method is running with transactional, no need to use DAO
+	@Override
+	public void update(User user) {
+		// TODO Auto-generated method stub
+		User entity = userDAO.findById(user.getId());
+		if (entity != null){
+			entity.setId(user.getId());
+			entity.setUsername(user.getUsername());
+			entity.setFirstName(user.getFirstName());
+			entity.setLastName(user.getLastName());
+			entity.setPassword(user.getPassword());
+			entity.setDateOfBirth(user.getDateOfBirth());
+			entity.setEmail(user.getEmail());
+		}
+	}
+
 }

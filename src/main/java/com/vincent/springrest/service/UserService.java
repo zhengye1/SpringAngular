@@ -10,4 +10,5 @@ public interface UserService {
 	List<User> findAllUsers();
 	boolean existsUsername(String username);
 	void create(User user);
+	void update(User user);
 }

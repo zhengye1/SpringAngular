@@ -108,6 +108,14 @@ public class AppServiceTest {
 	}
 	
 	
+	@Test
+	public void testUpdateUser(){
+		User user = users.get(0);
+		when(userDAO.findById(anyInt())).thenReturn(user);
+		userService.update(user);
+		verify(userDAO, atLeastOnce()).findById(anyInt());
+	}
+	
 	public List<User> getUserList(){
 		User user1 = new User(1, "admin", "admin", "Admin", "Admin", "vincentcheng787@gmail.com", 
 				new LocalDate(1990, 12, 1));

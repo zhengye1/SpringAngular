@@ -27,7 +27,7 @@ public class SpringRestController {
 
 	static final Logger logger = LoggerFactory.getLogger(SpringRestController.class);
 
-	@RequestMapping(value="/user/", method=RequestMethod.GET)
+	@RequestMapping(value="/users/", method=RequestMethod.GET)
 	public ResponseEntity<List<User>> listAllUsers(){
 		List<User> users = userService.findAllUsers();
 		if(users.isEmpty()){
@@ -37,7 +37,7 @@ public class SpringRestController {
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
-	@RequestMapping(value="/user/{username}", method=RequestMethod.GET, 
+	@RequestMapping(value="/users/{username}", method=RequestMethod.GET, 
 			produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 			
 	public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username){
@@ -49,7 +49,7 @@ public class SpringRestController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/user/Id{id}", method=RequestMethod.GET, 
+	@RequestMapping(value="/users/Id{id}", method=RequestMethod.GET, 
 			produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
 		User user = userService.findById(id);
@@ -60,7 +60,7 @@ public class SpringRestController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/user/", method=RequestMethod.POST)
+	@RequestMapping(value="/users/", method=RequestMethod.POST)
 	public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder ucBuilder){
 		logger.info("creating new user: {}", user);
 		
@@ -74,5 +74,18 @@ public class SpringRestController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/user/").buildAndExpand(user.getId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+	}
+	
+	
+	@RequestMapping(value="/users/Id{id}", method=RequestMethod.PUT)
+	public ResponseEntity<User> update(@PathVariable int id, @RequestBody User user){
+		logger.info("Updating the information for user: {} ", user);
+		User current = userService.findById(id);
+		if (current == null){
+			logger.info("User {} not found", user);
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+		}
+		userService.update(user);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 }
