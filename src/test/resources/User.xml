@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<USER uid="1" username="adminT" firstName="Admin" lastName="Test"
+		password="password" dateOfBirth="1990-12-01" email="vincentcheng787@gmail.com" />
+	<USER uid="2" username="yukirinT" firstName="Yuki" lastName="Test"
+		password="Yukirin0715" dateOfBirth="1991-07-15" email="yuki.kashiwagi@akb.co.jp" />
+</dataset>

@@ -39,7 +39,7 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -2576213364395816479L;
 
 	@XmlAttribute
-	@Id @Column(name="uid") @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @Column(name="uid", updatable=false) @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
 	@XmlElement
