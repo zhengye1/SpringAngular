@@ -1,12 +1,18 @@
 package com.vincent.springrest.model;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,8 +34,6 @@ import com.vincent.springrest.convert.CustomDateSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="USER")
 public class User implements Serializable {
@@ -73,6 +77,13 @@ public class User implements Serializable {
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate dateOfBirth;
 
+	@NotEmpty
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "USERROLE", 
+             joinColumns = { @JoinColumn(name = "UID") }, 
+             inverseJoinColumns = { @JoinColumn(name = "RID") })
+    private Set<Role> roles = new HashSet<Role>();
+	
 	public User(){
 
 	}
@@ -128,6 +139,14 @@ public class User implements Serializable {
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	} 
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
 	@Override
 	public boolean equals(Object obj){
@@ -156,4 +175,5 @@ public class User implements Serializable {
 			}
 		}).toString();
 	}
+
 }

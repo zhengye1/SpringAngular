@@ -5,12 +5,13 @@ import javax.servlet.Filter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.vincent.springrest.filter.CORSFilter;
+import com.vincent.springrest.security.SecurityConfiguration;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { AppConfig.class, DBConfig.class };
+		return new Class[] { AppConfig.class, DBConfig.class};
 	}
 
 	@Override
