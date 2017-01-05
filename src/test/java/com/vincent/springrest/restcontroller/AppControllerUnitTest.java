@@ -239,6 +239,27 @@ public class AppControllerUnitTest {
         verifyNoMoreInteractions(userService);
     }
     
+    @Test
+    public void test_update_user_fail_409_Conflict() throws Exception {
+		User exist = new User(1, "admin", "admin", "Vincent", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));
+		User user =new User(1, "admin", "admin", "Vincent", "Admin", "vincentcheng787@gmail.com", 
+				new LocalDate(1990, 12, 1));
+		user.setId(2);
+
+        when(userService.findById(exist.getId())).thenReturn(exist);
+        doNothing().when(userService).update(user);
+
+        mockMvc.perform(
+                put(BASEURL + "/users/{id}", exist.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andExpect(status().isConflict());
+
+        verify(userService, times(1)).findById(exist.getId());
+        //verify(userService).update(user);
+        verifyNoMoreInteractions(userService);
+    }
     //========================== DELETE USER ==================================
     @Test
     public void test_delete_user_success() throws Exception {

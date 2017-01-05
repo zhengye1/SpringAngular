@@ -54,6 +54,7 @@ public class DBConfig {
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
 		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+		logger.info("Database info: {}", dataSource.getUrl());
 		return dataSource;
 	}
 

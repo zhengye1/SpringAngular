@@ -88,6 +88,11 @@ public class SpringRestController {
 			logger.info("User {} not found", user);
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
+		
+		if (current.getId() != user.getId()){
+			logger.error("Someone attempt to modify id");
+			return new ResponseEntity<User>(HttpStatus.CONFLICT);
+		}
 		userService.update(user);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
