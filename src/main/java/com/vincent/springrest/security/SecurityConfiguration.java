@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,11 +39,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
-		.authorizeRequests().antMatchers("/api/v1/**").authenticated()
+		.authorizeRequests()
+        .antMatchers(HttpMethod.POST, "/api/**").authenticated()
+        .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
+        .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
 		.and()
 		.httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthEntryPoint())
 		.and()
-		.csrf();
+		.csrf().disable();
 	}
 
     @Bean
