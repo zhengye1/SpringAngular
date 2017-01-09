@@ -1,5 +1,7 @@
 package com.vincent.springrest.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	UserDetailsService userDetailsService;
 
 	private static String REALM="MY_TEST_REALM";
+	static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
 
 	@Autowired
 	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.authorizeRequests()
+		.antMatchers(HttpMethod.GET, "/api/**").authenticated()
         .antMatchers(HttpMethod.POST, "/api/**").authenticated()
         .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
         .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
@@ -53,6 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CustomBasicAuthenticationEntryPoint getBasicAuthEntryPoint(){
         return new CustomBasicAuthenticationEntryPoint();
     }
+    
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
