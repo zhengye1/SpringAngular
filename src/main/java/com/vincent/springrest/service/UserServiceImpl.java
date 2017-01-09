@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vincent.springrest.dao.UserDAO;
@@ -14,9 +17,14 @@ import com.vincent.springrest.model.User;
 @Transactional
 public class UserServiceImpl implements UserService{
 
+	static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	UserDAO userDAO;
 
+	@Autowired
+	private PasswordEncoder encoder;
+	
 	@Override
 	public User findById(Integer id) {
 		// TODO Auto-generated method stub
@@ -44,6 +52,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void create(User user) {
 		// TODO Auto-generated method stub
+		user.setPassword(encoder.encode(user.getPassword()));
 		userDAO.create(user);
 	}
 
@@ -51,13 +60,14 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void update(User user) {
 		// TODO Auto-generated method stub
+		logger.info("Try to update User: {}", user);
 		User entity = userDAO.findById(user.getId());
 		if (entity != null){
 			entity.setId(user.getId());
 			entity.setUsername(user.getUsername());
 			entity.setFirstName(user.getFirstName());
 			entity.setLastName(user.getLastName());
-			entity.setPassword(user.getPassword());
+			entity.setPassword(encoder.encode(user.getPassword()));
 			entity.setDateOfBirth(user.getDateOfBirth());
 			entity.setEmail(user.getEmail());
 		}

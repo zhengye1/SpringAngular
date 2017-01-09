@@ -77,7 +77,6 @@ public class User implements Serializable {
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate dateOfBirth;
 
-	@NotEmpty
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USERROLE", 
              joinColumns = { @JoinColumn(name = "UID") }, 
