@@ -63,7 +63,7 @@ public class SpringRestController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/users/", method=RequestMethod.POST)
+	@RequestMapping(value="/users", method=RequestMethod.POST)
 	public ResponseEntity<Void> create(@RequestBody User user, UriComponentsBuilder ucBuilder){
 		logger.info("creating new user: {}", user);
 		
@@ -94,6 +94,7 @@ public class SpringRestController {
 			return new ResponseEntity<User>(HttpStatus.CONFLICT);
 		}
 		userService.update(user);
+		user = userService.findById(user.getId());
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	

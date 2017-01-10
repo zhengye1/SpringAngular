@@ -214,7 +214,7 @@ public class AppControllerUnitTest {
                         .content(asJsonString(user)))
                 .andExpect(status().isOk());
 
-        verify(userService, times(1)).findById(user.getId());
+        verify(userService, times(2)).findById(user.getId());
         verify(userService, times(1)).update(user);
         verifyNoMoreInteractions(userService);
     }

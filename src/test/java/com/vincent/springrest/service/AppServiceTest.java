@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import com.vincent.springrest.dao.UserDAO;
@@ -33,6 +34,9 @@ public class AppServiceTest {
 
 	@Mock
 	UserDAO userDAO;
+	
+	@Mock
+	PasswordEncoder encoder;
 
 	@Spy
 	List<User> users = new ArrayList<User>();
@@ -82,7 +86,14 @@ public class AppServiceTest {
 	@Test
 	public void testCreateUser(){
 		doNothing().when(userDAO).create(any(User.class));
-		userService.create(new User());
+		User user = new User();
+		user.setId(1);
+		user.setUsername("admin");
+		user.setPassword("admin");
+		user.setDateOfBirth(new LocalDate(1990, 12, 1));
+		String hash = encoder.encode("admin");
+		when(encoder.encode(user.getPassword())).thenReturn(hash);
+		userService.create(user);
 		verify(userDAO, atLeastOnce()).create(any(User.class));
 	}
 	
