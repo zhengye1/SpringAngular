@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CORSFilter implements Filter{
 	static final Logger logger = LoggerFactory.getLogger(CORSFilter.class);
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) 
