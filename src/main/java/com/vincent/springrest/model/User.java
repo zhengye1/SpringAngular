@@ -84,6 +84,9 @@ public class User implements Serializable {
              inverseJoinColumns = { @JoinColumn(name = "RID") })
     private Set<Role> roles = new HashSet<Role>();
 	
+	@Column(name = "login", nullable = false)
+	private String login;
+	
 	public User(){
 
 	}
@@ -148,11 +151,20 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
 	@Override
 	public boolean equals(Object obj){
 		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
