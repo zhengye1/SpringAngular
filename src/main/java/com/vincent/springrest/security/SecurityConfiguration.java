@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -76,6 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/failure").permitAll()
 		.antMatchers("/api/**").hasRole("ADMIN")
+		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.exceptionHandling()
