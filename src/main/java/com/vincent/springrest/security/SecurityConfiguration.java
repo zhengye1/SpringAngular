@@ -83,7 +83,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.accessDeniedHandler(restAccessDeniedHandler)
 		.and()
 		.formLogin()
-		//.loginProcessingUrl("/api/authenticate")
+		.loginProcessingUrl("/authenticate")
 		.successHandler(restAuthenticationSuccessHandler)
 		.failureHandler(restAuthenticationFailureHandler)
 		.usernameParameter("username")
